@@ -1,3 +1,9 @@
-# Retina Vessel Segmentation based on Frangi vesselness filter
+# Retina Vessel Segmentation based on Frangi vesselness filter and UNet architecture.
 
-This repo contains a notebook on retina vessel segmentation. 
+I propose the following pipeline in order to perform vessel segmentation :
+1) A preprocessing step which consists to enhance vessels structures with a Frangi filter.
+2) A UNet architecture to learn a segmentation model. 
+
+This repo contains :
+- A notebook on retina vessel enhancement via frangi vesselness filter. 
+- Python files to train a UNet network for performing segmentation.

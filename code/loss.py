@@ -7,10 +7,10 @@ class DiceLoss(nn.Module):
     def __init__(self, weight=None, size_average=True):
         super(DiceLoss, self).__init__()
 
-    def forward(self, inputs, targets, smooth=1):
+    def forward(self, inputs, targets, smooth=1e-3):
 
         #comment out if your model contains a sigmoid or equivalent activation layer
-        inputs = torch.sigmoid(inputs)
+        #inputs = torch.sigmoid(inputs)
 
         #flatten label and prediction tensors
         inputs = inputs.view(-1)
@@ -40,3 +40,21 @@ class DiceBCELoss(nn.Module):
         Dice_BCE = BCE + dice_loss
 
         return Dice_BCE
+
+class DiceCELoss(nn.Module) :
+    def __init__(self, weight=None, size_average=True):
+        super(DiceCELoss, self).__init__()
+        self.weight = weight
+    def forward(self, inputs, targets, smooth=1) :
+        inputs = F.softmax(inputs, dim=1)
+
+        CE = F.cross_entropy(inputs, targets, reduction="mean", weight=self.weight)
+
+        inputs = inputs.view(-1)
+        targets = targets.view(-1)
+        intersection = (inputs * targets).sum()
+        dice_loss = 1 - (2.*intersection + smooth)/(inputs.sum() + targets.sum() + smooth)
+
+        Dice_CE = CE + dice_loss
+
+        return Dice_CE

@@ -54,11 +54,11 @@ if __name__ == "__main__":
     create_dir("files")
 
     """ Load dataset """
-    train_x = sorted(glob("../new_data/train/image/*"))
-    train_y = sorted(glob("../new_data/train/mask/*"))
+    train_x = sorted(glob("new_data/train/image/*"))
+    train_y = sorted(glob("new_data/train/mask/*"))
 
-    valid_x = sorted(glob("../new_data/test/image/*"))
-    valid_y = sorted(glob("../new_data/test/mask/*"))
+    valid_x = sorted(glob("new_data/train/image/*"))
+    valid_y = sorted(glob("new_data/train/mask/*"))
 
     data_str = f"Dataset Size:\nTrain: {len(train_x)} - Valid: {len(valid_x)}\n"
     print(data_str)
@@ -68,9 +68,9 @@ if __name__ == "__main__":
     W = 512
     size = (H, W)
     batch_size = 2
-    num_epochs = 50
+    num_epochs = 60
     lr = 1e-4
-    checkpoint_path = "files/checkpoint.pth"
+    checkpoint_path = "files/checkpoint3.pth"
 
     """ Dataset and loader """
     train_dataset = DriveDataset(train_x, train_y)
@@ -96,17 +96,18 @@ if __name__ == "__main__":
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, 'min', patience=5, verbose=True)
-    loss_fn = nn.CrossEntropyLoss() #DiceBCELoss()
+    loss_fn = nn.CrossEntropyLoss(reduction="mean") #DiceBCELoss()
 
     """ Training the model """
     best_valid_loss = float("inf")
 
+    losses = []
     for epoch in range(num_epochs):
         start_time = time.time()
 
         train_loss = train(model, train_loader, optimizer, loss_fn, device)
         valid_loss = evaluate(model, valid_loader, loss_fn, device)
-
+        losses.append((train_loss, valid_loss))
         """ Saving the model """
         if valid_loss < best_valid_loss:
             data_str = f"Valid loss improved from {best_valid_loss:2.4f} to {valid_loss:2.4f}. Saving checkpoint: {checkpoint_path}"
@@ -122,3 +123,5 @@ if __name__ == "__main__":
         data_str += f'\tTrain Loss: {train_loss:.3f}\n'
         data_str += f'\t Val. Loss: {valid_loss:.3f}\n'
         print(data_str)
+
+    print(losses)

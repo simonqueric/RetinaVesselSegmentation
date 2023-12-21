@@ -12,11 +12,11 @@ def create_dir(path):
         os.makedirs(path)
 
 def load_data(path):
-    train_x = sorted(glob(os.path.join(path, "training", "images", "*.tif")))
-    train_y = sorted(glob(os.path.join(path, "training", "1st_manual", "*.gif")))
+    train_x = sorted(glob(os.path.join(path, "train", "images", "*.png")))
+    train_y = sorted(glob(os.path.join(path, "train", "masks", "*.png")))
 
-    test_x = sorted(glob(os.path.join(path, "test", "images", "*.tif")))
-    test_y = sorted(glob(os.path.join(path, "test", "1st_manual", "*.gif")))
+    test_x = sorted(glob(os.path.join(path, "test", "images", "*.png")))
+    test_y = sorted(glob(os.path.join(path, "test", "images", "*.png")))
 
     return (train_x, train_y), (test_x, test_y)
 
@@ -32,13 +32,13 @@ def augment_data(images, masks, save_path, augment=True):
         y = imageio.mimread(y)[0]
 
         if augment == True:
-            aug = HorizontalFlip(p=1.0)
-            augmented = aug(image=x, mask=y)
+            aug1 = HorizontalFlip(p=1.0)
+            augmented = aug1(image=x, mask=y)
             x1 = augmented["image"]
             y1 = augmented["mask"]
 
-            aug = VerticalFlip(p=1.0)
-            augmented = aug(image=x, mask=y)
+            aug2 = VerticalFlip(p=1.0)
+            augmented = aug2(image=x, mask=y)
             x2 = augmented["image"]
             y2 = augmented["mask"]
 
@@ -47,8 +47,8 @@ def augment_data(images, masks, save_path, augment=True):
             x3 = augmented["image"]
             y3 = augmented["mask"]
 
-            X = [x, x1, x2, x3]
-            Y = [y, y1, y2, y3]
+            X = [x, x1, x2, x]
+            Y = [y, y1, y2, y]
 
         else:
             X = [x]
@@ -75,7 +75,7 @@ if __name__ == "__main__":
     np.random.seed(42)
 
     """ Load the data """
-    data_path = "/media/nikhil/ML/ml_dataset/Retina blood vessel segmentation/"
+    data_path = "../data/"
     (train_x, train_y), (test_x, test_y) = load_data(data_path)
 
     print(f"Train: {len(train_x)} - {len(train_y)}")

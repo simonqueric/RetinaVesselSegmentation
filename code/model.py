@@ -1,5 +1,9 @@
 import torch
 import torch.nn as nn
+from torchsummary import summary
+
+
+softmax = nn.Softmax(dim=1)
 
 class conv_block(nn.Module):
     def __init__(self, in_c, out_c):
@@ -55,7 +59,7 @@ class build_unet(nn.Module):
         super().__init__()
 
         """ Encoder """
-        self.e1 = encoder_block(2, 64)
+        self.e1 = encoder_block(3, 64)
         self.e2 = encoder_block(64, 128)
         self.e3 = encoder_block(128, 256)
         self.e4 = encoder_block(256, 512)
@@ -93,7 +97,9 @@ class build_unet(nn.Module):
         return outputs
 
 if __name__ == "__main__":
-    x = torch.randn((2, 2, 512, 512))
+    x = torch.randn((1, 1, 512, 512))
     f = build_unet()
-    y = f(x)
-    print(y.shape)
+    #y = f(x)
+    #print(y)
+    f = f.to("cuda")
+    summary(f, (3, 512, 512))

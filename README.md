@@ -12,6 +12,8 @@ I propose the following pipeline in order to perform vessel segmentation :
 
 <img title="result" alt="Alt text" src="/images/11_0.jpg">
 
+<img title="result" alt="Alt text" src="/images/vessel-seg-final.png">
+
 <img title="result" alt="Alt text" src="/images/logs.png">
 
   

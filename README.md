@@ -4,11 +4,16 @@ I propose the following pipeline in order to perform vessel segmentation :
 1) A preprocessing step which consists to enhance vessels structures with a Frangi filter.
 2) A UNet architecture to learn a segmentation model. 
 
-<img title="result" alt="Alt text" src="/images/11_0.jpg">
-
 ### This repo contains :
 - A notebook about retina vessel enhancement with Frangi vesselness filter. 
 - Python files to train a UNet network for performing segmentation.
+
+### Results
+
+<img title="result" alt="Alt text" src="/images/11_0.jpg">
+
+<img title="result" alt="Alt text" src="/images/logs.png">
+
   
 ### References : 
 - [1] Z. Jadoon et al., Retinal Blood Vessels Segmentation using ISODATA and High Boost Filter
